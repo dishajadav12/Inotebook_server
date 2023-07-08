@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
@@ -6,7 +6,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    emain:{
+    email:{
         type: String,
         required: true,
         unique: true,
@@ -20,4 +20,6 @@ const UserSchema = new Schema({
         default: Date.now,
     },
 });
+const User=mongoose.model('User', UserSchema);
+User.createIndexes();
 module.exports = mongoose.model('User', UserSchema);
