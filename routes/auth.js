@@ -15,6 +15,7 @@ router.post('/createuser',[
     body('password','password must be atleast 5 character').isLength({min:5}),
 
 ],async (req,res)=>{
+  let success = false;
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({error: error.array()});
@@ -23,7 +24,8 @@ router.post('/createuser',[
     try{
    let user = await User.findOne({email:req.body.email});
    if(user){
-    return res.status(200).json({error: "user with this email is already exists"});
+    success=false;
+    return res.status(200).json({success,error: "user with this email is already exists"});
    }
    const salt = await bcrypt.genSalt(10);
    const secPassword = await bcrypt.hash(req.body.password, salt);
@@ -38,7 +40,8 @@ router.post('/createuser',[
       }
     }
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.json(authtoken);
+    success = true;
+    res.json({success, authtoken});
 
    } catch (error){
     console.log(error.message);
@@ -67,7 +70,8 @@ router.post('/login',[
      }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if(!passwordCompare){
-        return res.status(400).json({error: "try to login with correct credentials "});
+          success = false;
+        return res.status(400).json({success ,error: "try to login with correct credentials "});
      }
 
 
@@ -77,7 +81,8 @@ router.post('/login',[
       }};
 
       const authtoken = jwt.sign(data, JWT_SECRET);
-      res.json(authtoken);
+      success = true;
+      res.json({success, authtoken});
   
      } catch (error){
       console.log(error.message);
