@@ -18,6 +18,8 @@ const { body, validationResult } = require('express-validator');
         }
 
     })
+
+ 
 // ROUTE:2 Add a new Note using : POST  "/api/auth/addnote". No login required
     router.post('/addnote', fetchUser,[
         body('title','Enter a valid title').isLength({min:3}),
@@ -44,7 +46,6 @@ const { body, validationResult } = require('express-validator');
 
 
 })
-
 // ROUTE:3 Update an existing note: PUT  "/api/auth/updatenote". No login required
 router.put('/updatenote/:id', fetchUser, async (req,res)=>{
     try {
